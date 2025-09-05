@@ -34,13 +34,13 @@
   <button class="navitem" data-view="db">База данных</button>
   <button class="navitem" data-view="refs">Справка</button>
   <button class="navitem" data-view="settings">Настройки</button>
-  <div class="drawer-foot muted small">Версия 2025.13</div>
+  <div class="drawer-foot muted small">Версия 2025.14</div>
 </nav>
 <div id="scrim" class="scrim" hidden></div>
 
 <main class="container">
   <div style="background:#1a212b;border:1px solid #273042;color:#fff;padding:10px 12px;border-radius:12px;margin:8px 0;">
-    Запущена сборка <b>2025.13</b> (чистая верстка без модалок).
+    Запущена сборка <b>2025.14</b> — оффлайн-режим включён. При обновлениях появится подсказка «Доступно обновление».
   </div>
 
   <!-- DASHBOARD -->
@@ -184,10 +184,54 @@
       <div class="row"><button id="exportBtn" class="btn">Экспорт</button><input id="importFile" type="file" accept="application/json"></div>
     </div>
   </section>
+<div id="updateBanner" class="card" style="display:none; margin:10px 0; background:#13202a; border-color:#254052;">
+  Доступно обновление. <button id="reloadBtn" class="btn primary" style="margin-left:10px">Обновить</button>
+</div>
 </main>
 
 <footer class="footer muted small">Данные сохраняются локально • Независимая альтернатива</footer>
 
 <script src="app.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').then(reg=>{
+      // Initial check
+      if (reg.waiting) { showUpdateBanner(reg); }
+      // When a new SW is found
+      reg.addEventListener('updatefound', ()=>{
+        const newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', ()=>{
+          if (newWorker.state === 'installed') {
+            if (navigator.serviceWorker.controller) {
+              showUpdateBanner(reg);
+            }
+          }
+        });
+      });
+      // Listen for controllerchange to auto-reload once
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    });
+  });
+}
+function showUpdateBanner(reg){
+  const b = document.getElementById('updateBanner');
+  const btn = document.getElementById('reloadBtn');
+  if(!b||!btn) return;
+  b.style.display = 'block';
+  btn.onclick = ()=>{
+    if (reg.waiting) {
+      reg.waiting.postMessage({type:'SKIP_WAITING'});
+    }
+  };
+}
+</script>
 </body>
 </html>
