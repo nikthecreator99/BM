@@ -43,7 +43,7 @@
   <button class="navitem" data-view="db">База данных</button>
   <button class="navitem" data-view="refs">Справка</button>
   <button class="navitem" data-view="settings">Настройки</button>
-  <div class="drawer-foot muted small">Версия 2025.17</div>
+  <div class="drawer-foot muted small">Версия 2025.18</div>
 </nav>
 <div id="scrim" class="scrim" hidden></div>
 
@@ -226,7 +226,7 @@
 
 <footer class="footer muted small">Данные сохраняются локально • Независимая альтернатива</footer>
 
-<script src="app.js"></script>
+<script defer src="app.js"></script>
 
 <script>
 if ('serviceWorker' in navigator) {
@@ -268,5 +268,30 @@ function showUpdateBanner(reg){
   };
 }
 </script>
+
+<script>
+(function(){
+  function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
+  ready(function(){
+    var menuBtn = document.getElementById('menuBtn');
+    var drawer = document.getElementById('drawer');
+    var scrim = document.getElementById('scrim');
+    function openDrawer(){ if(drawer){ drawer.classList.add('open'); } if(scrim){ scrim.hidden = false; } }
+    function closeDrawer(){ if(drawer){ drawer.classList.remove('open'); } if(scrim){ scrim.hidden = true; } }
+    if(menuBtn){
+      menuBtn.addEventListener('click', function(){
+        if(drawer && drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+      });
+    }
+    if(scrim){ scrim.addEventListener('click', closeDrawer); }
+    // Fallback clicks so пользователь видит, что кнопка живая
+    var fab = document.getElementById('fabAddTrip');
+    if(fab){ fab.addEventListener('click', function(){ console.log('FAB clicked'); }); }
+    var addSection = document.getElementById('addSectionBtn');
+    if(addSection){ addSection.addEventListener('click', function(){ console.log('Add Section clicked'); }); }
+  });
+})();
+</script>
+
 </body>
 </html>

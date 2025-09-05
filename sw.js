@@ -1,4 +1,4 @@
-const CACHE = 'bloknot-2025-v2025-17';
+const CACHE = 'bloknot-2025-v2025-18';
 const PRECACHE = [
   './',
   './index.html',

@@ -108,3 +108,5 @@ background:rgba(0,0,0,.78);color:#fff;border:1px solid rgba(255,255,255,.15);box
 .toast.show{animation:toastfade .2s ease, toastout .2s ease 2.2s forwards}
 @keyframes toastfade{from{opacity:0;transform:translateX(-50%) translateY(6px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes toastout{to{opacity:0}}
+
+.scrim[hidden]{display:none !important; pointer-events:none !important}
