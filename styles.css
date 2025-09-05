@@ -110,3 +110,15 @@ background:rgba(0,0,0,.78);color:#fff;border:1px solid rgba(255,255,255,.15);box
 @keyframes toastout{to{opacity:0}}
 
 .scrim[hidden]{display:none !important; pointer-events:none !important}
+
+
+/* --- iOS tap fixes (v2025.19) --- */
+* { -webkit-tap-highlight-color: rgba(0,0,0,0); touch-action: manipulation; }
+button, .btn, .iconbtn { -webkit-appearance: none; }
+.appbar { position: sticky; top: 0; z-index: 20; }
+.drawer { z-index: 30; }
+.scrim { z-index: 25; background: rgba(0,0,0,.45); position: fixed; inset: 0; }
+.scrim[hidden] { display: none !important; pointer-events: none !important; }
+main.container { position: relative; z-index: 10; }
+.fab { position: fixed; right: 16px; bottom: 16px; z-index: 40; }
+#updateBanner { position: relative; z-index: 15; }

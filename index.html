@@ -43,7 +43,7 @@
   <button class="navitem" data-view="db">База данных</button>
   <button class="navitem" data-view="refs">Справка</button>
   <button class="navitem" data-view="settings">Настройки</button>
-  <div class="drawer-foot muted small">Версия 2025.18</div>
+  <div class="drawer-foot muted small">Версия 2025.19</div>
 </nav>
 <div id="scrim" class="scrim" hidden></div>
 
@@ -289,6 +289,66 @@ function showUpdateBanner(reg){
     if(fab){ fab.addEventListener('click', function(){ console.log('FAB clicked'); }); }
     var addSection = document.getElementById('addSectionBtn');
     if(addSection){ addSection.addEventListener('click', function(){ console.log('Add Section clicked'); }); }
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  function addTap(el, handler){
+    if(!el) return;
+    let tapped = false;
+    el.addEventListener('touchstart', function(ev){
+      tapped = true;
+      try{ ev.preventDefault(); }catch(e){}
+      handler(ev);
+    }, {passive:false});
+    el.addEventListener('click', function(ev){
+      if(isIOS && tapped){ tapped = false; return; }
+      handler(ev);
+    });
+  }
+  function ready(fn){
+    if(document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+  ready(function(){
+    var drawer = document.getElementById('drawer');
+    var scrim  = document.getElementById('scrim');
+    var menuBtn = document.getElementById('menuBtn');
+    function openDrawer(){ if(drawer){ drawer.classList.add('open'); } if(scrim){ scrim.hidden=false; } }
+    function closeDrawer(){ if(drawer){ drawer.classList.remove('open'); } if(scrim){ scrim.hidden=true; } }
+    addTap(menuBtn, function(){ (drawer && drawer.classList.contains('open')) ? closeDrawer() : openDrawer(); });
+    addTap(scrim, closeDrawer);
+
+    // Navigation between views
+    document.querySelectorAll('.navitem').forEach(function(btn){
+      addTap(btn, function(){
+        document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        var view = btn.getAttribute('data-view');
+        document.querySelectorAll('.view').forEach(v=> v.hidden = (v.id !== 'view-' + view));
+        closeDrawer();
+      });
+    });
+
+    // FAB Add Trip
+    addTap(document.getElementById('fabAddTrip'), function(){
+      if(window.openTripModal){ try{ window.openTripModal(); return; }catch(e){} }
+      alert('Добавление поездки: откройте раздел «Поездки» и используйте форму. (Временный режим iOS)');
+    });
+
+    // Add Section
+    addTap(document.getElementById('addSectionBtn'), function(){
+      try {
+        localStorage.setItem('sectionsInlineFormOpen', JSON.stringify(true));
+      } catch(e){}
+      var btn = document.querySelector('.navitem[data-view="sections"]');
+      if(btn){ btn.click(); } // переключим вкладку
+      // Дальше основная логика сработает из app.js; если нет — хотя бы откроется раздел
+    });
   });
 })();
 </script>
