@@ -686,3 +686,23 @@ init();
 
 
 
+
+// Manual update check button (v2025.15)
+document.addEventListener('DOMContentLoaded', ()=>{
+  const btn = document.getElementById('checkUpdateBtn');
+  if(btn){
+    btn.addEventListener('click', ()=>{
+      if('serviceWorker' in navigator && navigator.serviceWorker.getRegistration){
+        navigator.serviceWorker.getRegistration().then(reg=>{
+          if(reg){
+            reg.update().then(()=>{
+              alert('Проверка обновлений завершена. Если есть новая версия, появится баннер вверху.');
+            });
+          } else {
+            alert('Service Worker не найден.');
+          }
+        });
+      }
+    });
+  }
+});

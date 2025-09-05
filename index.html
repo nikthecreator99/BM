@@ -34,14 +34,12 @@
   <button class="navitem" data-view="db">База данных</button>
   <button class="navitem" data-view="refs">Справка</button>
   <button class="navitem" data-view="settings">Настройки</button>
-  <div class="drawer-foot muted small">Версия 2025.14</div>
+  <div class="drawer-foot muted small">Версия 2025.15</div>
 </nav>
 <div id="scrim" class="scrim" hidden></div>
 
 <main class="container">
-  <div style="background:#1a212b;border:1px solid #273042;color:#fff;padding:10px 12px;border-radius:12px;margin:8px 0;">
-    Запущена сборка <b>2025.14</b> — оффлайн-режим включён. При обновлениях появится подсказка «Доступно обновление».
-  </div>
+  
 
   <!-- DASHBOARD -->
   <section id="view-dashboard" class="view">
@@ -104,6 +102,10 @@
     <div id="payrollView" class="stack" hidden></div>
 
     <button id="fabAddTrip" class="fab" title="Добавить поездку">+</button>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
+    </div>
   </section>
 
   <!-- SECTIONS -->
@@ -113,6 +115,10 @@
       <button id="addSectionBtn" class="btn">Новый участок</button>
     </div>
     <div id="sectionList" class="stack"></div>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
+    </div>
   </section>
 
   <!-- TARIFFS -->
@@ -133,6 +139,10 @@
         <button id="saveTariffsBtn" class="btn primary">Сохранить</button>
         <button id="resetTariffsBtn" class="btn ghost">Сброс</button>
       </div>
+    </div>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
     </div>
   </section>
 
@@ -155,6 +165,10 @@
         <div class="muted">Стоимость: <b id="fuelCost">—</b></div>
       </div>
     </div>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
+    </div>
   </section>
 
   <!-- DB TOOLS -->
@@ -165,6 +179,10 @@
       <div class="row"><input id="restoreFile" type="file" accept="application/json"></div>
       <div class="row"><button id="clearDbBtn" class="btn danger">Полная очистка</button></div>
     </div>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
+    </div>
   </section>
 
   <!-- REFS -->
@@ -174,6 +192,10 @@
       <textarea id="refText" placeholder="Добавьте свои шпаргалки…"></textarea>
       <div class="row"><button id="saveRefsBtn" class="btn">Сохранить</button><button id="clearRefsBtn" class="btn ghost">Очистить</button></div>
     </div>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
+    </div>
   </section>
 
   <!-- SETTINGS -->
@@ -182,6 +204,10 @@
     <div class="card form">
       <div class="row"><label>Тема</label><select id="themeSelect"><option value="dark">Тёмная</option><option value="light">Светлая</option></select></div>
       <div class="row"><button id="exportBtn" class="btn">Экспорт</button><input id="importFile" type="file" accept="application/json"></div>
+    </div>
+  
+    <div class="row" style="margin-top:10px">
+      <button id="checkUpdateBtn" class="btn">Проверить обновления</button>
     </div>
   </section>
 <div id="updateBanner" class="card" style="display:none; margin:10px 0; background:#13202a; border-color:#254052;">
