@@ -43,7 +43,7 @@
   <button class="navitem" data-view="db">База данных</button>
   <button class="navitem" data-view="refs">Справка</button>
   <button class="navitem" data-view="settings">Настройки</button>
-  <div class="drawer-foot muted small">Версия 2025.19</div>
+  <div class="drawer-foot muted small">Версия 2025.20</div>
 </nav>
 <div id="scrim" class="scrim" hidden></div>
 
@@ -269,29 +269,7 @@ function showUpdateBanner(reg){
 }
 </script>
 
-<script>
-(function(){
-  function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
-  ready(function(){
-    var menuBtn = document.getElementById('menuBtn');
-    var drawer = document.getElementById('drawer');
-    var scrim = document.getElementById('scrim');
-    function openDrawer(){ if(drawer){ drawer.classList.add('open'); } if(scrim){ scrim.hidden = false; } }
-    function closeDrawer(){ if(drawer){ drawer.classList.remove('open'); } if(scrim){ scrim.hidden = true; } }
-    if(menuBtn){
-      menuBtn.addEventListener('click', function(){
-        if(drawer && drawer.classList.contains('open')) closeDrawer(); else openDrawer();
-      });
-    }
-    if(scrim){ scrim.addEventListener('click', closeDrawer); }
-    // Fallback clicks so пользователь видит, что кнопка живая
-    var fab = document.getElementById('fabAddTrip');
-    if(fab){ fab.addEventListener('click', function(){ console.log('FAB clicked'); }); }
-    var addSection = document.getElementById('addSectionBtn');
-    if(addSection){ addSection.addEventListener('click', function(){ console.log('Add Section clicked'); }); }
-  });
-})();
-</script>
+
 
 
 <script>
@@ -348,6 +326,84 @@ function showUpdateBanner(reg){
       var btn = document.querySelector('.navitem[data-view="sections"]');
       if(btn){ btn.click(); } // переключим вкладку
       // Дальше основная логика сработает из app.js; если нет — хотя бы откроется раздел
+    });
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  function addTap(el, handler){
+    if(!el) return;
+    // Use touchend without preventDefault to not kill native click
+    el.addEventListener('touchend', function(ev){ handler(ev); }, {passive:true});
+    el.addEventListener('click', function(ev){ handler(ev); });
+  }
+  function ready(fn){
+    if(document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+  function killBlockers(){
+    const els = Array.from(document.querySelectorAll('*'));
+    els.forEach(el=>{
+      const cs = getComputedStyle(el);
+      if(cs.position === 'fixed' && (parseInt(cs.zIndex)||0) >= 1){
+        const rect = el.getBoundingClientRect();
+        const full = rect.width >= window.innerWidth - 2 && rect.height >= window.innerHeight - 2;
+        const isScrim = el.id === 'scrim';
+        const drawer = document.getElementById('drawer');
+        const drawerOpen = drawer && drawer.classList.contains('open');
+        if(full && (!isScrim || !drawerOpen)){
+          // Neutralize accidental full-screen overlay
+          el.style.pointerEvents = 'none';
+          el.classList.add('fullscreen-blocker');
+        }
+      }
+    });
+  }
+  ready(function(){
+    // Emergency floating button
+    const btn = document.createElement('button');
+    btn.textContent = 'Разблокировать клики';
+    btn.className = 'btn overlay-killer';
+    btn.addEventListener('click', killBlockers);
+    document.body.appendChild(btn);
+
+    // Initial scan
+    setTimeout(killBlockers, 0);
+    setTimeout(killBlockers, 500);
+
+    var drawer = document.getElementById('drawer');
+    var scrim  = document.getElementById('scrim');
+    var menuBtn = document.getElementById('menuBtn');
+    function openDrawer(){ if(drawer){ drawer.classList.add('open'); } if(scrim){ scrim.hidden=false; } }
+    function closeDrawer(){ if(drawer){ drawer.classList.remove('open'); } if(scrim){ scrim.hidden=true; } setTimeout(killBlockers,0); }
+    addTap(menuBtn, function(){ (drawer && drawer.classList.contains('open')) ? closeDrawer() : openDrawer(); });
+
+    addTap(scrim, closeDrawer);
+
+    // Navigation between views
+    document.querySelectorAll('.navitem').forEach(function(btn){
+      addTap(btn, function(){
+        document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        var view = btn.getAttribute('data-view');
+        document.querySelectorAll('.view').forEach(v=> v.hidden = (v.id !== 'view-' + view));
+        closeDrawer();
+      });
+    });
+
+    addTap(document.getElementById('fabAddTrip'), function(){
+      if(window.openTripModal){ try{ window.openTripModal(); return; }catch(e){} }
+      alert('Добавление поездки доступно в разделе «Поездки» (временная заглушка iOS).');
+    });
+
+    addTap(document.getElementById('addSectionBtn'), function(){
+      try { localStorage.setItem('sectionsInlineFormOpen', 'true'); } catch(e){}
+      const btn = document.querySelector('.navitem[data-view="sections"]');
+      if(btn){ btn.click(); }
     });
   });
 })();
